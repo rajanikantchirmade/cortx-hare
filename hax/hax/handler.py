@@ -77,7 +77,8 @@ class ConsumerThread(StoppableThread):
                             raise StopIteration()
                         item = pull_msg()
 
-                    LOG.debug('Got %s message from queue', item)
+                    # XXX TODO Fixm mong syslog msg
+                    # LOG.debug('Got %s message from queue', item)
                     if isinstance(item, EntrypointRequest):
                         # While replying any Exception is catched. In such a
                         # case, the motr process will receive EAGAIN and
