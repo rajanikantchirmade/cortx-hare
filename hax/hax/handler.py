@@ -77,7 +77,17 @@ class ConsumerThread(StoppableThread):
                             raise StopIteration()
                         item = pull_msg()
 
-                    LOG.debug('Got %s message from queue', item)
+                    # @todo XXX Fixme.
+                    # Some of items in event queue are long
+                    # e.g HaNvecGetEvent, BroadcastHAStates these may contains
+                    # lost list of conf objects fids and their stats, and as
+                    # size of cluster increses, size of these events increses.
+                    # Lets skip these messages to unblock IEM issue and need
+                    # proper optimised logs
+                    if not (isinstance(item, HaNvecGetEvent) or
+                            isinstance(item, BroadcastHAStates)):
+                        LOG.debug('Got %s message from queue', item)
+
                     if isinstance(item, EntrypointRequest):
                         # While replying any Exception is catched. In such a
                         # case, the motr process will receive EAGAIN and
